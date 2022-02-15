@@ -68,6 +68,13 @@ const App = () => {
     ),
   }));
 
+  const likeStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(translateX.value, [0, hiddenTranslateX / 5], [0, 1]),
+  }));
+  const nopeStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(translateX.value, [0, -hiddenTranslateX / 5], [0, 1]),
+  }));
+
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, context) => {
       context.startX = translateX.value;
@@ -106,8 +113,16 @@ const App = () => {
       {currentProfile && (
         <PanGestureHandler onGestureEvent={gestureHandler}>
           <Animated.View style={[styles.animatedCard, cardStyle]}>
-            <Image source={Like} style={styles.like} />
-            <Image source={Nope} style={styles.nope} />
+            <Animated.Image
+              source={Like}
+              style={[styles.like, {left: 10}, likeStyle]}
+              resizeMode="contain"
+            />
+            <Animated.Image
+              source={Nope}
+              style={[styles.like, {right: 10}, nopeStyle]}
+              resizeMode="contain"
+            />
             <Card user={currentProfile} />
           </Animated.View>
         </PanGestureHandler>
@@ -123,8 +138,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   animatedCard: {
-    width: '100%',
-    flex: 1,
+    width: '90%',
+    height: '70%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -135,10 +150,13 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   like: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
+    position: 'absolute',
+    top: 10,
+    zIndex: 1,
+    elevation: 1,
   },
-  nope: {},
 });
 
 export default App;
